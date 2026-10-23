@@ -64,8 +64,7 @@ jobs:
           github-token: ${{ github.token }}
           script: |
             const trustedCreatorId = 10716935;
-            const statusContext =
-              `edgellm/internal-ci/${context.runId}/${process.env.GITHUB_RUN_ATTEMPT}`;
+            const statusContext = 'edgellm/internal-ci';
             let pipelineId;
             while (true) {
               const statuses = await github.paginate(github.rest.repos.listCommitStatusesForRef, {
@@ -76,8 +75,14 @@ jobs:
               const status = statuses.find(item =>
                 item.context === statusContext && item.creator?.id === trustedCreatorId
               );
-              const match = /^gitlab-pipeline:([1-9][0-9]*)$/.exec(status?.description || '');
-              if (match) {
+              const match = /^gitlab-pipeline:([1-9][0-9]*);github-actions:([1-9][0-9]*):([1-9][0-9]*)$/.exec(
+                status?.description || ''
+              );
+              if (
+                match &&
+                match[2] === String(context.runId) &&
+                match[3] === process.env.GITHUB_RUN_ATTEMPT
+              ) {
                 if (pipelineId && pipelineId !== match[1]) {
                   throw new Error('Internal pipeline identity changed');
                 }
