@@ -57,7 +57,7 @@ jobs:
     permissions:
       statuses: read
     runs-on: linux-amd64-cpu4
-    timeout-minutes: 360
+    timeout-minutes: 120
     steps:
       - name: Wait for internal CI
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
