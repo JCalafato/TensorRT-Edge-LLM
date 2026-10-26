@@ -51,6 +51,7 @@ jobs:
     name: Trigger internal CI
     needs: security-suite
     if: >-
+      vars.EDGE_LLM_INTERNAL_CI_ENABLED == 'true' &&
       github.repository == 'NVIDIA/TensorRT-Edge-LLM' &&
       startsWith(github.ref, 'refs/heads/pull-request/')
     permissions:
